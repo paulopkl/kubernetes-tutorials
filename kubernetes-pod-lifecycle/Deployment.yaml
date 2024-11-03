@@ -1,0 +1,114 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: app
+spec:
+  resources:
+    requests:
+      storage: 5Gi
+  volumeMode: efs
+  accessModes: # Allow many Pods to attach volumes on this
+    - ReadWriteMany
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp
+  namespace: default
+spec:
+  replicas: 4
+  strategy: # Default is RollingUpdate, Provides zero downtime
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25% # How many pods can be down at any given time
+      maxSurge: 25% # How many new pods should be created
+  selector:
+    matchLabels:
+      app: myapp
+  template:
+    metadata:
+      labels:
+        app: myapp
+    spec:
+      restartPolicy: Always
+      imagePullPolicy: Always
+      initContainers:
+        - name: init-microservice
+          image: busybox:1.28
+
+        # Wait DB be ready
+        - name: init-mydb
+          image: busybox:1.28
+          command: ["sh", "-c", "until nslookup mydb.pvt; do echo waiting for mydb; sleep 2; done"]
+
+        # Clone Repository from Github
+        - name: init-repo
+          image: busybox:1.28
+          command: ["sh", "-c", "echo clone repo ..."]
+          volumeMounts:
+            - name: repo
+              mountPath: /repo
+      containers:
+        - name: myapp
+          image: <Image>
+          ports:
+            - name: http
+              containerPort: 8080
+          env:
+            - name:  ENVVARNAME
+              value:  ENVVARVALUE
+          resources: # Best Practice always set requests and limits
+            requests:
+              memory: 64Mi
+              cpu: 250m
+            limits:
+              memory: 128Mi
+              cpu: 500m
+          startupProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe: # Containers that arent ready dont receive traffic
+            httpGet:
+              path: /status
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 3
+          livenessProbe: # Restart app if transitions to broken states and cannot recover
+            httpGet:
+              path: /status
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 3
+      volumes:
+        - name: content
+          emptyDir:
+            sizeLimit: 1Gi
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: myapp
+  namespace: default
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: myapp
+  minReplicas: 1
+  maxReplicas: 10
+  metrics:
+    - type: Resource # Scale up if CPU exceeds 80%
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 80
+    - type: Resource # Scale up if Memory exceeds 70%
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 70

@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: myapp
+  namespace: default
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nginx
+  serviceName: myapp
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+        - name: myapp
+          image: registry.k8s.io/nginx-slim:0.8
+          ports:
+            - name: web
+              containerPort: 80
+          resources: # Best Practice always set requests and limits
+            requests:
+              memory: 64Mi
+              cpu: 250m
+            limits:
+              memory: 128Mi
+              cpu: 500m
+          env:
+            - name:  ENVVARNAME
+              value:  ENVVARVALUE
+          volumeMounts:
+            - name: www
+              mountPath: /usr/share/nginx/html
+  volumeClaimTemplates:
+    - metadata:
+        name: www
+      spec:
+        accessModes:
+          - "ReadWriteOnce"
+        resources:
+          requests:
+            storage: 1Gi
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: myapp
+  namespace: default
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: StatefulSet
+    name: myapp
+  minReplicas: 1
+  maxReplicas: 5
+  metrics:
+    - type: Resource # Scale up if CPU exceeds 80%
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 80
+    - type: Resource # Scale up if Memory exceeds 70%
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 70

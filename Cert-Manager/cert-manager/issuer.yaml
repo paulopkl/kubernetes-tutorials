@@ -1,0 +1,25 @@
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-issuer
+  namespace: defaul # stagging
+  # annotations:
+    # cert-manager.io/cluster-issuer: "letsencrypt"
+spec:
+  acme:
+    # You must replace this email address with your own.
+    # Let's Encrypt will use this to contact you about expiring
+    # certificates, and issues related to your account.
+    email: palmeida.ipms@gmail.com
+    # Let's Encrypt for Stagging, it will never be trusted by any clientes
+    # server: https://acme-stagging-v02.api.letsencrypt.org/directory
+    # Let's Encrypt for Production, it will never be trusted by any clientes 
+    server: https://acme-v02.api.letsencrypt.org/directory
+    privateKeySecretRef:
+      # Secret resource that will be used to store the account's private key. (This is generated automatically)
+      name: letsencrypt-issuer-key
+    # Add a single challenge solver, HTTP01 using nginx
+    solvers:
+      - http01:
+          ingress:
+            ingressClassName: nginx

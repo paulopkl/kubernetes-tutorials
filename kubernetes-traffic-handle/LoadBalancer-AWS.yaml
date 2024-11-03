@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx
+  namespace: default
+  annotations:
+    # external for public acess, and internal for private acess
+    service.beta.kubernetes.io/aws-load-balancer-type: external #  "nlb-ip"
+    service.beta.kubernetes.io/aws-load-balancer-nlb-target-type: ip
+    # If you want to create a Network Load Balancer in a public subnet to load balance to Amazon EC2 nodes 
+    # (Fargate can only be private), specify internet-facing with the following annotation:
+    service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
+spec:
+  type: LoadBalancer
+  selector:
+    app: nginx
+  ports:
+    - name: web
+      port: 80
+      targetPort: 80
+      protocol: TCP

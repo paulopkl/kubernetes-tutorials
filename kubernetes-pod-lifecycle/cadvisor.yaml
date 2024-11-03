@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: cadvisor
+  labels:
+    app: cadvisor
+spec:
+  selector:
+    matchLabels:
+      app: cadvisor
+  template:
+    metadata:
+      labels:
+        app: cadvisor
+    spec:
+      containers:
+      - name: cadvisor
+        image: google/cadvisor:latest  # Use the latest or a specific version of cAdvisor
+        ports:
+        - containerPort: 8080          # Expose cAdvisor on port 8080 for metrics collection
+          name: http-metrics
+        resources:
+          limits:
+            cpu: "100m"
+            memory: "200Mi"
+          requests:
+            cpu: "50m"
+            memory: "100Mi"
+        securityContext:
+          runAsUser: 0                  # Run as root to access node and container stats
+        volumeMounts:
+          - name: root # Root filesystem.
+            mountPath: /rootfs
+            readOnly: true
+          - name: var-run # Required to access runtime files.
+            mountPath: /var/run
+            readOnly: true
+          - name: sys # Needed for system stats.
+            mountPath: /sys
+            readOnly: true
+          - name: docker # Used to monitor Docker stats if using Docker as the container runtime.
+            mountPath: /var/lib/docker
+            readOnly: true
+      volumes:
+        - name: root
+          hostPath:
+            path: /
+        - name: var-run
+          hostPath:
+            path: /var/run
+        - name: sys
+          hostPath:
+            path: /sys
+        - name: docker
+          hostPath:
+            path: /var/lib/docker
+
+# kubectl port-forward <cadvisor-pod-name> 8080:8080
