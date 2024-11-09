@@ -12,6 +12,4 @@ Service /customers
 mydomain.com/customers/create-new-customer ->    Service/create-new-customer
 mydomain.com/customers/validate-documents ->     Service/validate-documents
 
-
 # Dont forget to point your domain (A record) to Load Balancer (Public IP)
-

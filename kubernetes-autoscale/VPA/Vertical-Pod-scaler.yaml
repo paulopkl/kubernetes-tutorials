@@ -1,0 +1,50 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hamster
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hamster
+  template:
+    metadata:
+      labels:
+        app: hamster
+    spec:
+      containers:
+        - name: hamster
+          image: k8s.gcr.io/ubuntu-slim:0.1
+          resources:
+            requests:
+              cpu: 180m
+              memory: 50Mi
+            limits:
+              cpu: 600m
+              memory: 100Mi
+          command: 
+            - "/bin/sh"
+          args:
+            - "-c"
+            - "while true; do timeout 0.2s yes >/dev/null; sleep 0.5s; done"
+---
+apiVersion: autoscaling.k8s.io/v1
+kind: VerticalPodAutoscaler
+metadata:
+  name: hamster-vpa
+  namespace: default
+spec:
+  targetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: hamster
+  updatePolicy:
+    updateMode: "Off"
+  resourcePolicy:
+    containerPolicies:
+      - containerName: '*'
+        controlledResources:
+          - "cpu"
+          - "memory"
