@@ -11,14 +11,6 @@ provider "aws" {
   region = var.region # Replace with your desired region
 }
 
-resource "aws_ecr_repository" "helm_charts" {
-  name = var.ecr_repository_name # Replace with your repository name
-
-  tags = {
-    Environment = "production"
-  }
-}
-
 resource "aws_iam_policy" "ecr_policy" {
   name        = "ECRHelmAccessPolicy"
   description = "Policy to allow ECR Helm chart access"
@@ -61,6 +53,14 @@ resource "aws_iam_role" "helm_ecr_role" {
 resource "aws_iam_role_policy_attachment" "helm_ecr_policy_attachment" {
   policy_arn = aws_iam_policy.ecr_policy.arn
   role       = aws_iam_role.helm_ecr_role.name
+}
+
+resource "aws_ecr_repository" "helm_charts" {
+  name = var.ecr_repository_name # Replace with your repository name
+
+  tags = {
+    Environment = "production"
+  }
 }
 
 output "ecr_repository_url" {
