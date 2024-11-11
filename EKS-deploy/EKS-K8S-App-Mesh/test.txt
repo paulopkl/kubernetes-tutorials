@@ -1,0 +1,10 @@
+## Check the service accessibility locally
+kubectl exec -it client-pod -c ubuntu -n client -- /bin/bash
+hostname
+curl server-svc.server.svc.cluster.local:8080/version
+
+## Find Loadbalancer
+kubectl get svc -n gateway
+
+## Check the service accessibility
+curl --header "Host: server-svc.devopsbyexample.com" ad01a7780a25a47eeab413417ed5fc5b-a603dbedc9a9d746.elb.us-east-1.amazonaws.com

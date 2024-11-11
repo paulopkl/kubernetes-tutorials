@@ -1,0 +1,12 @@
+---
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: VirtualService
+metadata:
+  namespace: server
+  name: server-virtual-service
+spec:
+  awsName: server-svc.server.svc.cluster.local # [Service name].[Namespace].[Type].cluster.local
+  provider:
+    virtualRouter:
+      virtualRouterRef:
+        name: server-virtual-router

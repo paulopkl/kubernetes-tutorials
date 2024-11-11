@@ -1,0 +1,3 @@
+# Search versions of chart "vault"
+helm search repo vault --versions
+

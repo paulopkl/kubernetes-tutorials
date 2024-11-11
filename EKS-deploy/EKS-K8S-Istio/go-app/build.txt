@@ -1,0 +1,2 @@
+docker build -t rekhugopal/eksistiodemo:latest .
+docker push rekhugopal/eksistiodemo:latest

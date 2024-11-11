@@ -1,0 +1,28 @@
+name: "Terraform"
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - eks-app-mesh/**
+
+  pull_request:
+    paths:
+      - eks-app-mesh/**
+
+jobs:
+  terraform:
+    name: "Terraform"
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: aws
+        shell: bash
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      

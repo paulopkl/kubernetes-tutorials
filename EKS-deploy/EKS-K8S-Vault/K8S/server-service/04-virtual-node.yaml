@@ -1,0 +1,19 @@
+---
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: VirtualNode
+metadata:
+  namespace: server
+  name: server-virtual-node
+spec:
+  podSelector:
+    matchLabels:
+      app: server-svc
+  listeners:
+    - portMapping:
+        port: 8080
+        protocol: http
+  serviceDiscovery:
+    # Any pod in the cluster can use the DNS name server-svc.server-svc.svc.cluster.local to communicate
+    # with the server-svc service. The internal DNS server resolves this name to the service’s IP address
+    dns:
+      hostname: server-svc.server.svc.cluster.local # [Service name].[Namespace].[Type].cluster.local

@@ -1,0 +1,9 @@
+apiVersion: install.istio.io/v1alpha1
+kind: IstioOperator
+metadata:
+  name: kiali-oper
+  namespace: istio-ingress
+spec:
+  components:
+    kiali:
+      enabled: true

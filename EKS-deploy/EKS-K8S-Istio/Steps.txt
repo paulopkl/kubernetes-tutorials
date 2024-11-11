@@ -1,0 +1,14 @@
+# Login to client pod
+kubectl exec -it client -n backend -- sh
+
+# Client pod (SVC) to Service mesh service communication
+while true; do curl http://ss-app.staging:8080/api/devices && echo "" && sleep 1; done
+
+# Check the service accessibility
+curl --header "Host: app.devopsbyexample.com" http://  /api/devices
+
+# 
+curl --header "Host: app.devopsbyexample.com" http://a78f68cdda4674679acde612488727b3-839381643.us-west-2.elb.amazonaws.com/api/devices
+
+#
+Invoke-WebRequest -Uri "http://a78f68cdda4674679acde612488727b3-839381643.us-west-2.elb.amazonaws.com/api/devices" -Headers @{"Host"="app.devopsbyexample.com"}

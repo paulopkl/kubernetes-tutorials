@@ -1,0 +1,21 @@
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  namespace: client
+  name: client-pod
+  labels:
+    app: client-pod
+spec:
+  serviceAccountName: client-sa
+  containers:
+    - name: ubuntu
+      image: alpine/curl:8.2.1
+      command: ["/bin/sh", "-c", "--"]
+      args: ["while true; do sleep 30; done;"]
+      # resources: {}
+      #   limits:
+      #     memory: "128Mi"
+      #     cpu: "500m"
+      # ports:
+      #   - containerPort: <Port>

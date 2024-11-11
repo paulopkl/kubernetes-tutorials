@@ -1,0 +1,17 @@
+1# Create keda namespace
+kubectl create namespace keda
+
+2# Create Service Account
+eksctl create iamserviceaccount --name keda-operator \
+    --namespace keda \
+    --cluster eks-demo \
+    --attach-policy-arn <SQS Policy ARN> \
+    --region us-east-1 \
+    --approve
+
+3# Install on kubernetes using HELM
+helm repo add kedacore https://kedacore.github.io/charts
+helm upgrade --install keda kedacore/keda --namespace keda \
+    --set serviceAccount.create=false \
+    --set serviceAccount.name=keda-operator \
+    --create-namespace
