@@ -9,10 +9,6 @@ metadata:
     nginx.ingress.kubernetes.io/rewrite-target: /$2
     # cert-manager.io/cluster-issuer: "letsencrypt"
 spec:
-  tls:
-    - hosts:
-      - mydomain.com
-      secretname: api-tls-secret # The Certificate generated Secret
   ingressClassName: nginx
   rules:
     - host: mydomain.com
@@ -25,3 +21,7 @@ spec:
                 name: api-svc
                 port: 
                   number: 80
+  tls:
+    - secretname: api-tls-secret # The Certificate generated Secret
+      hosts:
+        - mydomain.com

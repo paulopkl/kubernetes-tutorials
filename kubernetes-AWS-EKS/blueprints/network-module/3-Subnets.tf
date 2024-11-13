@@ -5,8 +5,8 @@ resource "aws_subnet" "private-region-a" {
 
   tags = {
     "Name"                                      = "private-${var.aws_region}a"
-    "kubernetes.io/role/internal-elb"           = "1"
-    "kubernetes.io/cluster/${var.cluster_name}" = "owned"
+    "kubernetes.io/role/internal-elb"           = "1"     # Private load balancers
+    "kubernetes.io/cluster/${var.cluster_name}" = "owned" # This tag is used by karpenter to discover and autoscale cluster
   }
 }
 
@@ -17,8 +17,8 @@ resource "aws_subnet" "private-region-b" {
 
   tags = {
     "Name"                                      = "private-${var.aws_region}b"
-    "kubernetes.io/role/internal-elb"           = "1"
-    "kubernetes.io/cluster/${var.cluster_name}" = "owned"
+    "kubernetes.io/role/internal-elb"           = "1"     # Private load balancers
+    "kubernetes.io/cluster/${var.cluster_name}" = "owned" # This tag is used by karpenter to discover and autoscale cluster
   }
 }
 
@@ -30,8 +30,8 @@ resource "aws_subnet" "public-region-a" {
 
   tags = {
     "Name"                                      = "public-${var.aws_region}a"
-    "kubernetes.io/role/elb"                    = "1"
-    "kubernetes.io/cluster/${var.cluster_name}" = "owned"
+    "kubernetes.io/role/elb"                    = "1"     # Private load balancers
+    "kubernetes.io/cluster/${var.cluster_name}" = "owned" # This tag is used by karpenter to discover and autoscale cluster
   }
 }
 
@@ -43,7 +43,17 @@ resource "aws_subnet" "public-region-b" {
 
   tags = {
     "Name"                                      = "public-${var.aws_region}b"
-    "kubernetes.io/role/elb"                    = "1"
-    "kubernetes.io/cluster/${var.cluster_name}" = "owned"
+    "kubernetes.io/role/elb"                    = "1"     # Expose to outside world Public load balancers
+    "kubernetes.io/cluster/${var.cluster_name}" = "owned" # This tag is used by karpenter to discover and autoscale cluster
   }
+}
+
+output "subnet_ids" {
+  description = "List of subnet IDs: public_a, public_b, private_a, private_b"
+  value = [
+    aws_subnet.private-region-a.id,
+    aws_subnet.private-region-b.id,
+    aws_subnet.public-region-a.id,
+    aws_subnet.public-region-b.id
+  ]
 }

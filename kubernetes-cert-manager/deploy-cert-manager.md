@@ -11,7 +11,8 @@
 2. helm install cert-manager jetstack/cert-manager \
   --set crds.enabled=true \
   --version v1.16.1 \
-  --namespace cert-manager --create-namespace
+  --namespace cert-manager \
+  --create-namespace
 
 # Kubectl apply Output YAML
 
@@ -19,13 +20,12 @@
   --set crds.enabled=true \
   --version v1.16.1 \
   --namespace cert-manager \
-  # --set prometheus.enabled=false \   # Example: disabling prometheus using a Helm parameter
-  > ./cert-manager/cert-manager.custom.yaml
+  > ./cert-manager/cert-manager-1-16-1.yaml
+# --set prometheus.enabled=false \  # Example: disabling prometheus using a Helm parameter
 
 2. kubectl create ns cert-manager
 
-3. kubectl apply -f ./cert-manager/cert-manager.custom.yaml
-
+3. kubectl apply -f ./cert-manager/cert-manager-1-16-1.yaml
 
 # Validate
 
