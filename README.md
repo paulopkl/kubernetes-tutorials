@@ -50,19 +50,19 @@
 
 ## All of Kubernetes Scale
 
-1. [Metrics-server:]https://github.com/paulopkl/kubernetes-tutorials/tree/main/kubernetes-autoscale/metrics-server
+1. [Metrics-server]https://github.com/paulopkl/kubernetes-tutorials/tree/main/kubernetes-autoscale/metrics-server
     - Helm
     - Install metrics-server
 
-2. [Explore about HorizontalPodAutoscaler (HPA):](https://github.com/paulopkl/kubernetes-tutorials/tree/main/kubernetes-autoscale/HPA)
+2. [Explore about HorizontalPodAutoscaler (HPA)](https://github.com/paulopkl/kubernetes-tutorials/tree/main/kubernetes-autoscale/HPA)
 
-2. [Explorte about VerticalPodAutoscaler (VPA):](https://github.com/paulopkl/kubernetes-tutorials/tree/main/kubernetes-autoscale/VPA)
+2. [Explorte about VerticalPodAutoscaler (VPA)](https://github.com/paulopkl/kubernetes-tutorials/tree/main/kubernetes-autoscale/VPA)
 
 4. KEDA
 
 ## Using Karpenter within Kubernetes
 
-1. [Explore the use of Karpenter:](https://github.com/paulopkl/kubernetes-tutorials/tree/main/kubernetes-karpenter)
+1. [Explore the use of Karpenter](https://github.com/paulopkl/kubernetes-tutorials/tree/main/kubernetes-karpenter)
 
 2. Tudo sobre EKS, Karpenter
     - https://github.com/clowdhaus/eks-reference-architecture/blob/main/karpenter-gpu/README.md
@@ -73,11 +73,11 @@
 
 ## Using Kubernetes On-Premises
 
-1. [Explore the use of Kubernetes on Local Datacenters:](https://github.com/paulopkl/kubernetes-tutorials/tree/main/kubernetes-on-premises)
+1. [Explore the use of Kubernetes on Local Datacenters](https://github.com/paulopkl/kubernetes-tutorials/tree/main/kubernetes-on-premises)
 
 ## Using Kubernetes with Crossplane
 
-1. [Explore the fact of creating Cloud resources using Kubernetes yaml files plus Crossplane:](https://github.com/paulopkl/kubernetes-tutorials/tree/main/kubernetes-crossplane)
+1. [Explore the fact of creating Cloud resources using Kubernetes yaml files plus Crossplane](https://github.com/paulopkl/kubernetes-tutorials/tree/main/kubernetes-crossplane)
     - Helm
     - Crossplane
 
